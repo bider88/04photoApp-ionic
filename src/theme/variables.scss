@@ -23,7 +23,18 @@ $app-direction: ltr;
 // http://ionicframework.com/docs/theming/overriding-ionic-variables/
 
 
+ion-content, ion-list .item-md {
+  background-color: #333333 !important;
+}
 
+
+ion-card {
+  background-color: #444444 !important;
+}
+
+ion-card ion-card-content, ion-card ion-card-title, .text-input {
+  color: #ffffff !important;
+}
 
 // Named Color Variables
 // --------------------------------------------------
