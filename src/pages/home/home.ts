@@ -11,6 +11,7 @@ import { Post } from '../../models/post.model';
 export class HomePage {
 
   posts: Array<Post> = [];
+  notFinished: boolean = true;
 
   constructor(
     private modalCtrl: ModalController,
@@ -20,14 +21,7 @@ export class HomePage {
   }
 
   getPost() {
-    this._postProvider.getPosts().subscribe(
-      res => {
-        this.posts = res;
-      },
-      err => {
-        console.log(err);
-      }
-    )
+    this.posts = this._postProvider.getPosts();
   }
 
   showModal() {
@@ -35,6 +29,18 @@ export class HomePage {
     const modal = this.modalCtrl.create( UploadPage );
 
     modal.present();
+  }
+
+  doInfinite(infiniteScroll) {
+    console.log('Begin async operation');
+
+    this._postProvider.loadFourPosts().then(
+      (notFinished: boolean) => {
+        console.log(notFinished);
+        this.notFinished = notFinished;
+        infiniteScroll.complete();
+      }
+    );
   }
 
 }

@@ -4,7 +4,7 @@ import { AngularFireDatabase } from 'angularfire2/database';
 import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/firestore';
 import * as firebase from 'firebase';
 
-import { Observable } from 'rxjs';
+// import { Observable } from 'rxjs';
 
 import { Post } from '../../models/post.model';
 
@@ -15,7 +15,8 @@ import { LoadingController } from 'ionic-angular';
 export class PostProvider {
 
   private postCollection: AngularFirestoreCollection<Post>;
-  posts: Observable<Post[]>;
+  posts: Post[] = [];
+  lastPost: Date = null;
   uid: string;
 
   constructor(
@@ -23,9 +24,52 @@ export class PostProvider {
     // private _authProvider: AuthProvider,
     private _afs: AngularFirestore,
     public loadingCtrl: LoadingController
-  ) {
-    this.postCollection = this._afs.collection<Post>( 'post', ref => ref.orderBy('createdAt', 'desc').limit(1) );
-    this.posts = this.postCollection.valueChanges();
+  )
+  {
+    this.loadLastPost();
+  }
+
+  private loadLastPost() {
+
+   this._afs.collection<Post>( 'post', ref => ref.limit(1).orderBy('createdAt', 'desc'))
+                            .valueChanges().subscribe(
+                              post => {
+                                this.lastPost = post[0].createdAt;
+                                console.log(this.lastPost);
+                                this.posts.push(post[0]);
+                                console.log(this.posts);
+
+                                this.loadFourPosts();
+                              },
+                              err => console.log(err)
+                            );
+
+  }
+
+  loadFourPosts() {
+
+    return new Promise( (resolve, reject) => {
+      this._afs.collection<Post>( 'post', ref => ref.orderBy('createdAt', 'desc').startAfter(this.lastPost).limit(3) )
+                              .valueChanges().subscribe(
+                                posts => {
+
+                                  if (posts.length == 0) {
+                                    console.log('no hay más registros');
+                                    resolve(false);
+                                    return;
+                                  }
+
+                                  this.lastPost = posts[posts.length - 1].createdAt;
+
+                                  posts.forEach( post => {
+                                    this.posts.push(post);
+                                  });
+
+                                  resolve(true);
+                                },
+                                err => console.log(err)
+                              );
+    })
   }
 
   getPosts() {
