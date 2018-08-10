@@ -14,6 +14,7 @@ import { firebaseConfig } from './firebase';
 
 // Plugins
 import { Camera } from '@ionic-native/camera';
+import { ImagePicker } from '@ionic-native/image-picker';
 
 import { MomentModule } from 'angular2-moment';
 
@@ -56,7 +57,8 @@ import { PipesModule } from '../pipes/pipes.module';
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     PostProvider,
     AuthProvider,
-    Camera
+    Camera,
+    ImagePicker
   ]
 })
 export class AppModule {}

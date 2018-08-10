@@ -2,15 +2,16 @@
 
   <ion-toolbar color="dark">
 
+    <ion-title>{{ title | placeholder:'Crear post' }}</ion-title>
+
     <ion-buttons end>
 
       <button ion-button (click)="close()">
-        <ion-icon name="close"></ion-icon>
+        Cerrar
       </button>
 
     </ion-buttons>
 
-    <ion-title>{{ title | placeholder:'Crear post' }}</ion-title>
   </ion-toolbar>
 
 </ion-header>
@@ -37,7 +38,7 @@
 
       <ion-col>
 
-        <button ion-button block ion-left>
+        <button ion-button block ion-left (click)="selectImage()">
           <ion-icon name="photos"></ion-icon> &nbsp;Seleccionar
         </button>
 
@@ -56,3 +57,13 @@
   </ion-grid>
 
 </ion-content>
+
+<ion-footer>
+  <ion-toolbar color="dark">
+
+    <button ion-button (click)="post()" color="primary" block [disabled]=" title.length < 1 || imagePreview.length <= 1 ">
+      <ion-icon name="cloud-upload"></ion-icon> &nbsp;Publicar
+    </button>
+
+  </ion-toolbar>
+</ion-footer>
