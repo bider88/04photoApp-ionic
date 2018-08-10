@@ -4,6 +4,8 @@ import { UploadPage } from '../upload/upload';
 import { PostProvider } from '../../providers/post/post';
 import { Post } from '../../models/post.model';
 
+import { SocialSharing } from '@ionic-native/social-sharing';
+
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html'
@@ -15,7 +17,8 @@ export class HomePage {
 
   constructor(
     private modalCtrl: ModalController,
-    private _postProvider: PostProvider
+    private _postProvider: PostProvider,
+    private socialSharing: SocialSharing
   ) {
     this.getPost();
   }
@@ -29,6 +32,16 @@ export class HomePage {
     const modal = this.modalCtrl.create( UploadPage );
 
     modal.present();
+  }
+
+  share(post: Post) {
+    console.log(JSON.stringify(post));
+    this.socialSharing.shareViaFacebook(post.title, null, post.image)
+    .then(() => {
+      // Success!
+    }).catch(() => {
+      // Error!
+    });
   }
 
   doInfinite(infiniteScroll) {

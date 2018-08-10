@@ -35,9 +35,7 @@ export class PostProvider {
                             .valueChanges().subscribe(
                               post => {
                                 this.lastPost = post[0].createdAt;
-                                console.log(this.lastPost);
                                 this.posts.push(post[0]);
-                                console.log(this.posts);
 
                                 this.loadFourPosts();
                               },
